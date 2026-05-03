@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Herói da Nutrição</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Nunito:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --purple-50: #EEEDFE;
+    --purple-200: #AFA9EC;
+    --purple-400: #7F77DD;
+    --purple-600: #534AB7;
+    --purple-800: #3C3489;
+    --purple-900: #26215C;
+    --gold: #EF9F27;
+    --gold-dark: #BA7517;
+    --bg: #0e0c1a;
+    --bg2: #16132a;
+    --bg3: #1e1a36;
+    --card: #1a1730;
+    --card2: #221f3d;
+    --border: rgba(127,119,221,0.2);
+    --border2: rgba(127,119,221,0.4);
+    --text: #e8e6f8;
+    --text2: #a09cc0;
+    --text3: #6a6590;
+    --green: #1D9E75;
+    --green-light: #5DCAA5;
+    --red: #E24B4A;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Nunito', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    background-image:
+      radial-gradient(ellipse at 20% 10%, rgba(127,119,221,0.12) 0%, transparent 50%),
+      radial-gradient(ellipse at 80% 80%, rgba(83,74,183,0.08) 0%, transparent 50%);
+  }
+
+  h1, h2, .level-title-txt { font-family: 'Cinzel', serif; }
+
+  .page { max-width: 520px; margin: 0 auto; padding: 1.5rem 1rem 4rem; }
+
+  /* HEADER */
+  .top-bar {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 1.5rem;
+  }
+  .game-title { font-family: 'Cinzel', serif; font-size: 15px; color: var(--purple-400); letter-spacing: 0.08em; }
+  .pts-badge {
+    background: var(--card2); border: 0.5px solid var(--border2);
+    border-radius: 999px; padding: 5px 14px;
+    font-size: 13px; font-weight: 600; color: var(--gold);
+    display: flex; align-items: center; gap: 6px;
+  }
+  .pts-star { font-size: 14px; }
+
+  /* HERO CARD */
+  .hero-card {
+    background: var(--card);
+    border: 0.5px solid var(--border2);
+    border-radius: 16px;
+    padding: 1.25rem;
+    margin-bottom: 1rem;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero-card::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0; height: 2px;
+    background: linear-gradient(90deg, transparent, var(--purple-400), transparent);
+  }
+
+  .hero-header { display: flex; align-items: center; gap: 14px; margin-bottom: 1.25rem; }
+  .avatar-wrap { position: relative; }
+  .avatar {
+    width: 60px; height: 60px; border-radius: 50%;
+    background: var(--card2);
+    border: 2px solid var(--purple-400);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 26px; flex-shrink: 0;
+    box-shadow: 0 0 16px rgba(127,119,221,0.3);
+  }
+  .level-ring {
+    position: absolute; bottom: -2px; right: -2px;
+    background: var(--gold); color: #1a1200;
+    width: 20px; height: 20px; border-radius: 50%;
+    font-size: 10px; font-weight: 700;
+    display: flex; align-items: center; justify-content: center;
+    border: 1.5px solid var(--bg);
+  }
+  .hero-info { flex: 1; }
+  .hero-name-input {
+    background: transparent; border: none; outline: none;
+    font-family: 'Cinzel', serif; font-size: 17px; font-weight: 600;
+    color: var(--text); width: 100%;
+    border-bottom: 1px dashed var(--border);
+    padding-bottom: 2px; margin-bottom: 4px;
+  }
+  .hero-name-input::placeholder { color: var(--text3); }
+  .hero-class { font-size: 12px; color: var(--purple-400); font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; }
+
+  .xp-section { margin-bottom: 0.25rem; }
+  .xp-row { display: flex; justify-content: space-between; font-size: 11px; color: var(--text3); margin-bottom: 5px; font-weight: 600; letter-spacing: 0.03em; }
+  .xp-track { height: 8px; background: var(--bg2); border-radius: 999px; overflow: hidden; border: 0.5px solid var(--border); }
+  .xp-fill { height: 100%; background: linear-gradient(90deg, var(--purple-600), var(--purple-400)); border-radius: 999px; transition: width 0.5s cubic-bezier(0.34,1.56,0.64,1); }
+
+  .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 1rem; }
+  .stat-box { background: var(--bg2); border-radius: 10px; padding: 10px 8px; text-align: center; border: 0.5px solid var(--border); }
+  .stat-icon-lbl { font-size: 16px; margin-bottom: 2px; }
+  .stat-lbl { font-size: 10px; color: var(--text3); text-transform: uppercase; letter-spacing: 0.04em; font-weight: 600; margin-bottom: 2px; }
+  .stat-val { font-size: 22px; font-weight: 700; color: var(--text); font-family: 'Cinzel', serif; }
+
+  /* CARDS */
+  .card {
+    background: var(--card);
+    border: 0.5px solid var(--border);
+    border-radius: 14px;
+    padding: 1.25rem;
+    margin-bottom: 1rem;
+  }
+  .card-title {
+    font-family: 'Cinzel', serif;
+    font-size: 13px; font-weight: 600;
+    color: var(--purple-400);
+    text-transform: uppercase; letter-spacing: 0.08em;
+    margin-bottom: 1rem;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .card-title::after { content: ''; flex: 1; height: 0.5px; background: var(--border); }
+
+  /* MISSIONS */
+  .tab-row { display: flex; gap: 6px; margin-bottom: 1rem; }
+  .tab {
+    padding: 5px 14px; border-radius: 999px; font-size: 12px; font-weight: 700;
+    border: 0.5px solid var(--border); background: transparent;
+    color: var(--text2); cursor: pointer; transition: all 0.2s; font-family: 'Nunito', sans-serif;
+  }
+  .tab.active { background: var(--purple-600); color: #fff; border-color: var(--purple-400); }
+
+  .mission {
+    display: flex; align-items: center; gap: 12px;
+    padding: 11px 0;
+    border-bottom: 0.5px solid var(--border);
+    cursor: pointer; transition: opacity 0.15s;
+  }
+  .mission:last-child { border-bottom: none; }
+  .mission:active { opacity: 0.7; }
+  .mcheck {
+    width: 24px; height: 24px; border-radius: 7px; flex-shrink: 0;
+    border: 1.5px solid var(--border2);
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.2s; background: var(--bg2);
+  }
+  .mcheck.done { background: var(--green); border-color: var(--green); }
+  .mcheck.done::after { content: '✓'; color: white; font-size: 13px; font-weight: 700; }
+  .mtext { flex: 1; font-size: 14px; color: var(--text); line-height: 1.4; }
+  .mtext.done { text-decoration: line-through; color: var(--text3); }
+  .mpts { font-size: 12px; font-weight: 700; color: var(--gold); white-space: nowrap; }
+
+  /* STREAK */
+  .streak-row { display: flex; gap: 6px; justify-content: space-between; }
+  .day-btn {
+    flex: 1; aspect-ratio: 1; border-radius: 10px;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    gap: 2px; cursor: pointer; transition: all 0.2s;
+    border: 0.5px solid var(--border); background: var(--bg2);
+  }
+  .day-lbl { font-size: 10px; font-weight: 700; color: var(--text3); text-transform: uppercase; letter-spacing: 0.02em; }
+  .day-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--border); transition: all 0.2s; }
+  .day-btn.hit { background: rgba(29,158,117,0.15); border-color: var(--green); }
+  .day-btn.hit .day-lbl { color: var(--green-light); }
+  .day-btn.hit .day-dot { background: var(--green); box-shadow: 0 0 6px var(--green); }
+  .day-btn.today { border-color: var(--purple-400); }
+  .day-btn.today .day-lbl { color: var(--purple-400); }
+
+  /* LEVELS */
+  .level-row {
+    display: flex; align-items: center; gap: 12px;
+    padding: 11px 0; border-bottom: 0.5px solid var(--border);
+  }
+  .level-row:last-child { border-bottom: none; }
+  .lv-circle {
+    width: 34px; height: 34px; border-radius: 50%; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px; font-weight: 700; font-family: 'Cinzel', serif;
+    background: var(--bg2); color: var(--text3); border: 0.5px solid var(--border);
+    transition: all 0.3s;
+  }
+  .lv-circle.done { background: var(--green); color: white; border-color: var(--green); }
+  .lv-circle.cur { background: var(--purple-600); color: white; border-color: var(--purple-400); box-shadow: 0 0 12px rgba(127,119,221,0.4); }
+  .lv-info { flex: 1; }
+  .level-title-txt { font-size: 14px; font-weight: 600; color: var(--text); }
+  .lv-desc { font-size: 12px; color: var(--text3); margin-top: 2px; line-height: 1.4; }
+  .lv-req { font-size: 12px; font-weight: 700; color: var(--text3); white-space: nowrap; }
+  .lv-req.cur { color: var(--purple-400); }
+  .lv-req.done { color: var(--green); }
+
+  /* SHOP */
+  .shop-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .shop-item {
+    background: var(--bg2); border: 0.5px solid var(--border);
+    border-radius: 10px; padding: 12px;
+  }
+  .shop-name { font-size: 13px; font-weight: 600; color: var(--text); margin-bottom: 4px; line-height: 1.3; }
+  .shop-cost { font-size: 12px; font-weight: 700; color: var(--gold); margin-bottom: 8px; }
+  .shop-btn {
+    width: 100%; padding: 6px 0; border-radius: 8px;
+    font-size: 12px; font-weight: 700; cursor: pointer;
+    border: 0.5px solid var(--border2);
+    background: transparent; color: var(--purple-400);
+    transition: all 0.2s; font-family: 'Nunito', sans-serif;
+  }
+  .shop-btn:hover:not(:disabled) { background: var(--purple-600); color: white; border-color: var(--purple-400); }
+  .shop-btn:disabled { opacity: 0.35; cursor: not-allowed; color: var(--text3); border-color: var(--border); }
+
+  /* RESET */
+  .reset-btn {
+    display: block; width: 100%; padding: 10px; margin-top: 1.5rem;
+    background: transparent; border: 0.5px solid var(--border);
+    border-radius: 10px; color: var(--text3); font-size: 13px;
+    font-family: 'Nunito', sans-serif; cursor: pointer; transition: all 0.2s;
+  }
+  .reset-btn:hover { border-color: var(--red); color: var(--red); }
+
+  /* TOAST */
+  .toast {
+    position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(10px);
+    background: var(--card2); border: 0.5px solid var(--border2);
+    color: var(--text); padding: 10px 22px;
+    border-radius: 999px; font-size: 13px; font-weight: 600;
+    opacity: 0; transition: all 0.3s; pointer-events: none; z-index: 999;
+    white-space: nowrap; backdrop-filter: blur(8px);
+  }
+  .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+  .toast.plus { color: var(--green-light); border-color: var(--green); }
+  .toast.minus { color: #F09595; border-color: var(--red); }
+  .toast.special { color: var(--gold); border-color: var(--gold); }
+
+  @media (max-width: 400px) {
+    .shop-grid { grid-template-columns: 1fr; }
+    .stats-grid { gap: 6px; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <div class="top-bar">
+    <div class="game-title">⚔ Herói da Nutrição</div>
+    <div class="pts-badge"><span class="pts-star">★</span><span id="top-pts">0 pts</span></div>
+  </div>
+
+  <!-- HERO -->
+  <div class="hero-card">
+    <div class="hero-header">
+      <div class="avatar-wrap">
+        <div class="avatar" id="avatar">🧑</div>
+        <div class="level-ring" id="level-ring">1</div>
+      </div>
+      <div class="hero-info">
+        <input class="hero-name-input" id="hero-name" placeholder="Digite seu nome de herói..." maxlength="24">
+        <div class="hero-class" id="hero-class">Novato da Nutrição</div>
+      </div>
+    </div>
+    <div class="xp-section">
+      <div class="xp-row">
+        <span>EXPERIÊNCIA</span>
+        <span id="xp-text">0 / 100 XP</span>
+      </div>
+      <div class="xp-track"><div class="xp-fill" id="xp-fill" style="width:0%"></div></div>
+    </div>
+    <div class="stats-grid">
+      <div class="stat-box">
+        <div class="stat-icon-lbl">★</div>
+        <div class="stat-lbl">Pontos</div>
+        <div class="stat-val" id="stat-pts">0</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-icon-lbl">🔥</div>
+        <div class="stat-lbl">Streak</div>
+        <div class="stat-val" id="stat-streak">0</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-icon-lbl">✓</div>
+        <div class="stat-lbl">Hoje</div>
+        <div class="stat-val" id="stat-today">0</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MISSIONS -->
+  <div class="card">
+    <div class="card-title">Missões</div>
+    <div class="tab-row">
+      <button class="tab active" onclick="switchTab('daily',this)">Diárias</button>
+      <button class="tab" onclick="switchTab('weekly',this)">Semanais</button>
+      <button class="tab" onclick="switchTab('monthly',this)">Mensais</button>
+    </div>
+    <div id="mission-list"></div>
+  </div>
+
+  <!-- STREAK -->
+  <div class="card">
+    <div class="card-title">Streak da Semana</div>
+    <div class="streak-row" id="streak-row"></div>
+  </div>
+
+  <!-- LEVELS -->
+  <div class="card">
+    <div class="card-title">Jornada de Níveis</div>
+    <div id="levels-list"></div>
+  </div>
+
+  <!-- SHOP -->
+  <div class="card">
+    <div class="card-title">Loja de Recompensas</div>
+    <div class="shop-grid" id="shop-grid"></div>
+  </div>
+
+  <button class="reset-btn" onclick="resetGame()">↺ Resetar progresso</button>
+
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const STORAGE_KEY = 'heroi_nutricao_v1';
+
+const missions = {
+  daily: [
+    { id:'d1', text:'Comeu a marmita no almoço', pts:10 },
+    { id:'d2', text:'Bebeu 2L de água hoje', pts:10 },
+    { id:'d3', text:'Não pediu delivery hoje', pts:10 },
+    { id:'d4', text:'Comeu fruta como lanche', pts:10 },
+    { id:'d5', text:'Ficou sem salgadinho ou biscoito', pts:10 },
+  ],
+  weekly: [
+    { id:'w1', text:'5 almoços caseiros na semana', pts:50 },
+    { id:'w2', text:'Experimentou 1 receita nova', pts:50 },
+    { id:'w3', text:'7 dias sem refrigerante', pts:50 },
+    { id:'w4', text:'Tomou água certa toda a semana', pts:50 },
+  ],
+  monthly: [
+    { id:'m1', text:'20 refeições caseiras no mês', pts:200 },
+    { id:'m2', text:'Perdeu 1kg este mês', pts:200 },
+    { id:'m3', text:'Cozinhou algo sozinho 1 vez', pts:200 },
+    { id:'m4', text:'30 dias de streak completo', pts:200 },
+  ],
+};
+
+const levels = [
+  { lvl:1, title:'Novato da Nutrição', desc:'Come pelo menos 1 refeição caseira por dia', req:0, avatar:'🧑' },
+  { lvl:2, title:'Aprendiz Saudável', desc:'5 dias seguidos sem ultraprocessado no almoço', req:100, avatar:'🧙' },
+  { lvl:3, title:'Guerreiro da Marmita', desc:'Experimenta 1 alimento novo por semana', req:300, avatar:'⚔️' },
+  { lvl:4, title:'Veterano do Freezer', desc:'30 dias de refeições caseiras no almoço', req:600, avatar:'🛡️' },
+  { lvl:5, title:'Lendário', desc:'Mantém o hábito saudável por 3 meses', req:1000, avatar:'👑' },
+];
+
+const shopItems = [
+  { id:'s1', name:'Dia de delivery liberado sem culpa', cost:100 },
+  { id:'s2', name:'Jogo novo ou DLC', cost:300 },
+  { id:'s3', name:'Item que estava querendo', cost:500 },
+  { id:'s4', name:'Experiência especial', cost:1000 },
+];
+
+const dayNames = ['Seg','Ter','Qua','Qui','Sex','Sáb','Dom'];
+
+function defaultState() {
+  return {
+    points: 0,
+    heroName: '',
+    dailyDone: [],
+    weeklyDone: [],
+    monthlyDone: [],
+    streakDays: [false,false,false,false,false,false,false],
+    lastReset: new Date().toDateString(),
+  };
+}
+
+function loadState() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (!raw) return defaultState();
+    return JSON.parse(raw);
+  } catch(e) { return defaultState(); }
+}
+
+function saveState() {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+}
+
+let state = loadState();
+let currentTab = 'daily';
+
+function getLevel(pts) {
+  let cur = levels[0];
+  for (const l of levels) { if (pts >= l.req) cur = l; }
+  return cur;
+}
+function getNextLevel(pts) {
+  for (const l of levels) { if (pts < l.req) return l; }
+  return null;
+}
+function getDoneSet() {
+  if (currentTab === 'daily') return new Set(state.dailyDone);
+  if (currentTab === 'weekly') return new Set(state.weeklyDone);
+  return new Set(state.monthlyDone);
+}
+function setDoneArr(arr) {
+  if (currentTab === 'daily') state.dailyDone = arr;
+  else if (currentTab === 'weekly') state.weeklyDone = arr;
+  else state.monthlyDone = arr;
+}
+
+function updateUI() {
+  const lv = getLevel(state.points);
+  const nextLv = getNextLevel(state.points);
+
+  document.getElementById('hero-name').value = state.heroName;
+  document.getElementById('avatar').textContent = lv.avatar;
+  document.getElementById('level-ring').textContent = lv.lvl;
+  document.getElementById('hero-class').textContent = lv.title;
+  document.getElementById('top-pts').textContent = state.points + ' pts';
+  document.getElementById('stat-pts').textContent = state.points;
+  document.getElementById('stat-streak').textContent = state.streakDays.filter(Boolean).length;
+  document.getElementById('stat-today').textContent = state.dailyDone.length;
+
+  if (nextLv) {
+    const pct = Math.round(((state.points - lv.req) / (nextLv.req - lv.req)) * 100);
+    document.getElementById('xp-fill').style.width = Math.min(pct, 100) + '%';
+    document.getElementById('xp-text').textContent = state.points + ' / ' + nextLv.req + ' XP';
+  } else {
+    document.getElementById('xp-fill').style.width = '100%';
+    document.getElementById('xp-text').textContent = 'Nível máximo — LENDÁRIO!';
+  }
+
+  renderMissions();
+  renderStreak();
+  renderLevels();
+  renderShop();
+}
+
+function renderMissions() {
+  const done = getDoneSet();
+  const items = missions[currentTab];
+  document.getElementById('mission-list').innerHTML = items.map(m => `
+    <div class="mission" onclick="toggleMission('${m.id}',${m.pts})">
+      <div class="mcheck ${done.has(m.id)?'done':''}"></div>
+      <div class="mtext ${done.has(m.id)?'done':''}">${m.text}</div>
+      <div class="mpts">+${m.pts}</div>
+    </div>
+  `).join('');
+}
+
+function toggleMission(id, pts) {
+  const done = getDoneSet();
+  let arr = [...done];
+  if (done.has(id)) {
+    arr = arr.filter(x => x !== id);
+    state.points = Math.max(0, state.points - pts);
+    showToast('-' + pts + ' pontos', 'minus');
+  } else {
+    arr.push(id);
+    state.points += pts;
+    showToast('+' + pts + ' pontos ganhos!', 'plus');
+  }
+  setDoneArr(arr);
+  saveState();
+  updateUI();
+}
+
+function switchTab(tab, btn) {
+  currentTab = tab;
+  document.querySelectorAll('.tab').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderMissions();
+}
+
+function renderStreak() {
+  const today = new Date().getDay();
+  const todayIdx = today === 0 ? 6 : today - 1;
+  document.getElementById('streak-row').innerHTML = dayNames.map((d, i) => `
+    <div class="day-btn ${state.streakDays[i]?'hit':''} ${i===todayIdx?'today':''}" onclick="toggleDay(${i})">
+      <div class="day-lbl">${d}</div>
+      <div class="day-dot"></div>
+    </div>
+  `).join('');
+}
+
+function toggleDay(i) {
+  state.streakDays[i] = !state.streakDays[i];
+  saveState();
+  renderStreak();
+  document.getElementById('stat-streak').textContent = state.streakDays.filter(Boolean).length;
+}
+
+function renderLevels() {
+  const lv = getLevel(state.points);
+  document.getElementById('levels-list').innerHTML = levels.map(l => {
+    const isDone = l.lvl < lv.lvl;
+    const isCur = l.lvl === lv.lvl;
+    return `
+      <div class="level-row">
+        <div class="lv-circle ${isDone?'done':isCur?'cur':''}">${isDone?'✓':l.lvl}</div>
+        <div class="lv-info">
+          <div class="level-title-txt">${l.title}</div>
+          <div class="lv-desc">${l.desc}</div>
+        </div>
+        <div class="lv-req ${isDone?'done':isCur?'cur':''}">${l.req===0?'início':l.req+' pts'}</div>
+      </div>
+    `;
+  }).join('');
+}
+
+function renderShop() {
+  document.getElementById('shop-grid').innerHTML = shopItems.map(item => `
+    <div class="shop-item">
+      <div class="shop-name">${item.name}</div>
+      <div class="shop-cost">★ ${item.cost} pts</div>
+      <button class="shop-btn" ${state.points < item.cost?'disabled':''} onclick="redeem(${item.cost},'${item.name}')">
+        ${state.points >= item.cost ? '🎁 Resgatar' : '🔒 Bloqueado'}
+      </button>
+    </div>
+  `).join('');
+}
+
+function redeem(cost, name) {
+  if (state.points < cost) return;
+  state.points -= cost;
+  saveState();
+  showToast('Recompensa resgatada: ' + name + '!', 'special');
+  updateUI();
+}
+
+function resetGame() {
+  if (!confirm('Tem certeza que quer resetar todo o progresso?')) return;
+  const name = state.heroName;
+  state = defaultState();
+  state.heroName = name;
+  saveState();
+  showToast('Progresso resetado.', 'minus');
+  updateUI();
+}
+
+let toastTimer;
+function showToast(msg, type='') {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast show ' + type;
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.className = 'toast', 2200);
+}
+
+document.getElementById('hero-name').addEventListener('input', e => {
+  state.heroName = e.target.value;
+  saveState();
+});
+
+updateUI();
+</script>
+</body>
+</html>
